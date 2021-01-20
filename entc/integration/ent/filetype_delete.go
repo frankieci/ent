@@ -13,6 +13,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/filetype"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -78,6 +79,8 @@ func (ftd *FileTypeDelete) sqlExec(ctx context.Context) (int, error) {
 			},
 		},
 	}
+	_spec.Node.Schema = ftd.schemaConfig.FileType
+	ctx = internal.NewSchemaConfigContext(ctx, ftd.schemaConfig)
 	if ps := ftd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

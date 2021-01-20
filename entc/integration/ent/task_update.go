@@ -12,6 +12,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/schema"
 	"github.com/facebook/ent/entc/integration/ent/task"
@@ -156,6 +157,8 @@ func (tu *TaskUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: task.FieldPriority,
 		})
 	}
+	_spec.Node.Schema = tu.schemaConfig.Task
+	ctx = internal.NewSchemaConfigContext(ctx, tu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, tu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{task.Label}
@@ -297,6 +300,8 @@ func (tuo *TaskUpdateOne) sqlSave(ctx context.Context) (_node *Task, err error) 
 			Column: task.FieldPriority,
 		})
 	}
+	_spec.Node.Schema = tuo.schemaConfig.Task
+	ctx = internal.NewSchemaConfigContext(ctx, tuo.schemaConfig)
 	_node = &Task{config: tuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

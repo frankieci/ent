@@ -13,6 +13,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/card"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/spec"
 	"github.com/facebook/ent/schema/field"
@@ -155,6 +156,7 @@ func (su *SpecUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = su.schemaConfig.Spec
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := su.mutation.RemovedCardIDs(); len(nodes) > 0 && !su.mutation.CardCleared() {
@@ -171,6 +173,7 @@ func (su *SpecUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = su.schemaConfig.Spec
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -190,11 +193,14 @@ func (su *SpecUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = su.schemaConfig.Spec
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = su.schemaConfig.Spec
+	ctx = internal.NewSchemaConfigContext(ctx, su.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, su.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{spec.Label}
@@ -335,6 +341,7 @@ func (suo *SpecUpdateOne) sqlSave(ctx context.Context) (_node *Spec, err error) 
 				},
 			},
 		}
+		edge.Schema = suo.schemaConfig.Spec
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := suo.mutation.RemovedCardIDs(); len(nodes) > 0 && !suo.mutation.CardCleared() {
@@ -351,6 +358,7 @@ func (suo *SpecUpdateOne) sqlSave(ctx context.Context) (_node *Spec, err error) 
 				},
 			},
 		}
+		edge.Schema = suo.schemaConfig.Spec
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -370,11 +378,14 @@ func (suo *SpecUpdateOne) sqlSave(ctx context.Context) (_node *Spec, err error) 
 				},
 			},
 		}
+		edge.Schema = suo.schemaConfig.Spec
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = suo.schemaConfig.Spec
+	ctx = internal.NewSchemaConfigContext(ctx, suo.schemaConfig)
 	_node = &Spec{config: suo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

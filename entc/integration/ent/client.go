@@ -308,6 +308,8 @@ func (c *CardClient) QueryOwner(ca *Card) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, card.OwnerTable, card.OwnerColumn),
 		)
+		schemaConfig := ca.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromV = sqlgraph.Neighbors(ca.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -324,6 +326,9 @@ func (c *CardClient) QuerySpec(ca *Card) *SpecQuery {
 			sqlgraph.To(spec.Table, spec.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, card.SpecTable, card.SpecPrimaryKey...),
 		)
+		schemaConfig := ca.schemaConfig
+		step.To.Schema = schemaConfig.Spec
+		step.Edge.Schema = schemaConfig.SpecCard
 		fromV = sqlgraph.Neighbors(ca.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -604,6 +609,8 @@ func (c *FileClient) QueryOwner(f *File) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, file.OwnerTable, file.OwnerColumn),
 		)
+		schemaConfig := f.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -620,6 +627,8 @@ func (c *FileClient) QueryType(f *File) *FileTypeQuery {
 			sqlgraph.To(filetype.Table, filetype.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, file.TypeTable, file.TypeColumn),
 		)
+		schemaConfig := f.schemaConfig
+		step.To.Schema = schemaConfig.FileType
 		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -636,6 +645,8 @@ func (c *FileClient) QueryField(f *File) *FieldTypeQuery {
 			sqlgraph.To(fieldtype.Table, fieldtype.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, file.FieldTable, file.FieldColumn),
 		)
+		schemaConfig := f.schemaConfig
+		step.To.Schema = schemaConfig.FieldType
 		fromV = sqlgraph.Neighbors(f.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -740,6 +751,8 @@ func (c *FileTypeClient) QueryFiles(ft *FileType) *FileQuery {
 			sqlgraph.To(file.Table, file.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, filetype.FilesTable, filetype.FilesColumn),
 		)
+		schemaConfig := ft.schemaConfig
+		step.To.Schema = schemaConfig.File
 		fromV = sqlgraph.Neighbors(ft.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -932,6 +945,8 @@ func (c *GroupClient) QueryFiles(gr *Group) *FileQuery {
 			sqlgraph.To(file.Table, file.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, group.FilesTable, group.FilesColumn),
 		)
+		schemaConfig := gr.schemaConfig
+		step.To.Schema = schemaConfig.File
 		fromV = sqlgraph.Neighbors(gr.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -948,6 +963,8 @@ func (c *GroupClient) QueryBlocked(gr *Group) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, group.BlockedTable, group.BlockedColumn),
 		)
+		schemaConfig := gr.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromV = sqlgraph.Neighbors(gr.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -964,6 +981,9 @@ func (c *GroupClient) QueryUsers(gr *Group) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, group.UsersTable, group.UsersPrimaryKey...),
 		)
+		schemaConfig := gr.schemaConfig
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserGroups
 		fromV = sqlgraph.Neighbors(gr.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -980,6 +1000,8 @@ func (c *GroupClient) QueryInfo(gr *Group) *GroupInfoQuery {
 			sqlgraph.To(groupinfo.Table, groupinfo.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, group.InfoTable, group.InfoColumn),
 		)
+		schemaConfig := gr.schemaConfig
+		step.To.Schema = schemaConfig.GroupInfo
 		fromV = sqlgraph.Neighbors(gr.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1084,6 +1106,8 @@ func (c *GroupInfoClient) QueryGroups(gi *GroupInfo) *GroupQuery {
 			sqlgraph.To(group.Table, group.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, groupinfo.GroupsTable, groupinfo.GroupsColumn),
 		)
+		schemaConfig := gi.schemaConfig
+		step.To.Schema = schemaConfig.Group
 		fromV = sqlgraph.Neighbors(gi.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1276,6 +1300,8 @@ func (c *NodeClient) QueryPrev(n *Node) *NodeQuery {
 			sqlgraph.To(node.Table, node.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, node.PrevTable, node.PrevColumn),
 		)
+		schemaConfig := n.schemaConfig
+		step.To.Schema = schemaConfig.Node
 		fromV = sqlgraph.Neighbors(n.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1292,6 +1318,8 @@ func (c *NodeClient) QueryNext(n *Node) *NodeQuery {
 			sqlgraph.To(node.Table, node.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, node.NextTable, node.NextColumn),
 		)
+		schemaConfig := n.schemaConfig
+		step.To.Schema = schemaConfig.Node
 		fromV = sqlgraph.Neighbors(n.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1396,6 +1424,8 @@ func (c *PetClient) QueryTeam(pe *Pet) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, pet.TeamTable, pet.TeamColumn),
 		)
+		schemaConfig := pe.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1412,6 +1442,8 @@ func (c *PetClient) QueryOwner(pe *Pet) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, pet.OwnerTable, pet.OwnerColumn),
 		)
+		schemaConfig := pe.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1516,6 +1548,9 @@ func (c *SpecClient) QueryCard(s *Spec) *CardQuery {
 			sqlgraph.To(card.Table, card.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, spec.CardTable, spec.CardPrimaryKey...),
 		)
+		schemaConfig := s.schemaConfig
+		step.To.Schema = schemaConfig.Card
+		step.Edge.Schema = schemaConfig.SpecCard
 		fromV = sqlgraph.Neighbors(s.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1708,6 +1743,8 @@ func (c *UserClient) QueryCard(u *User) *CardQuery {
 			sqlgraph.To(card.Table, card.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, user.CardTable, user.CardColumn),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.Card
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1724,6 +1761,8 @@ func (c *UserClient) QueryPets(u *User) *PetQuery {
 			sqlgraph.To(pet.Table, pet.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.PetsTable, user.PetsColumn),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.Pet
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1740,6 +1779,8 @@ func (c *UserClient) QueryFiles(u *User) *FileQuery {
 			sqlgraph.To(file.Table, file.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.FilesTable, user.FilesColumn),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.File
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1756,6 +1797,9 @@ func (c *UserClient) QueryGroups(u *User) *GroupQuery {
 			sqlgraph.To(group.Table, group.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.GroupsTable, user.GroupsPrimaryKey...),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.Group
+		step.Edge.Schema = schemaConfig.UserGroups
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1772,6 +1816,9 @@ func (c *UserClient) QueryFriends(u *User) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.FriendsTable, user.FriendsPrimaryKey...),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserFriends
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1788,6 +1835,9 @@ func (c *UserClient) QueryFollowers(u *User) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, user.FollowersTable, user.FollowersPrimaryKey...),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserFollowing
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1804,6 +1854,9 @@ func (c *UserClient) QueryFollowing(u *User) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.FollowingTable, user.FollowingPrimaryKey...),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserFollowing
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1820,6 +1873,8 @@ func (c *UserClient) QueryTeam(u *User) *PetQuery {
 			sqlgraph.To(pet.Table, pet.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, user.TeamTable, user.TeamColumn),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.Pet
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1836,6 +1891,8 @@ func (c *UserClient) QuerySpouse(u *User) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, user.SpouseTable, user.SpouseColumn),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1852,6 +1909,8 @@ func (c *UserClient) QueryChildren(u *User) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, user.ChildrenTable, user.ChildrenColumn),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}
@@ -1868,6 +1927,8 @@ func (c *UserClient) QueryParent(u *User) *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, user.ParentTable, user.ParentColumn),
 		)
+		schemaConfig := u.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil
 	}

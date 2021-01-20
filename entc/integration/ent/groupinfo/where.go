@@ -9,6 +9,7 @@ package groupinfo
 import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 )
 
@@ -304,6 +305,8 @@ func HasGroups() predicate.GroupInfo {
 			sqlgraph.To(GroupsTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, GroupsTable, GroupsColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Group
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -316,6 +319,8 @@ func HasGroupsWith(preds ...predicate.Group) predicate.GroupInfo {
 			sqlgraph.To(GroupsInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, GroupsTable, GroupsColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Group
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

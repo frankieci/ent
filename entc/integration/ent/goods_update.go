@@ -13,6 +13,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/goods"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -104,6 +105,8 @@ func (gu *GoodsUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
+	_spec.Node.Schema = gu.schemaConfig.Goods
+	ctx = internal.NewSchemaConfigContext(ctx, gu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, gu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{goods.Label}
@@ -194,6 +197,8 @@ func (guo *GoodsUpdateOne) sqlSave(ctx context.Context) (_node *Goods, err error
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Goods.ID for update")}
 	}
 	_spec.Node.ID.Value = id
+	_spec.Node.Schema = guo.schemaConfig.Goods
+	ctx = internal.NewSchemaConfigContext(ctx, guo.schemaConfig)
 	_node = &Goods{config: guo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

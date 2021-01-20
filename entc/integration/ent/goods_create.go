@@ -100,6 +100,7 @@ func (gc *GoodsCreate) createSpec() (*Goods, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = gc.schemaConfig.Goods
 	return _node, _spec
 }
 

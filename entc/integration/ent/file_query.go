@@ -18,6 +18,7 @@ import (
 	"github.com/facebook/ent/entc/integration/ent/fieldtype"
 	"github.com/facebook/ent/entc/integration/ent/file"
 	"github.com/facebook/ent/entc/integration/ent/filetype"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/user"
 	"github.com/facebook/ent/schema/field"
@@ -81,6 +82,8 @@ func (fq *FileQuery) QueryOwner() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, file.OwnerTable, file.OwnerColumn),
 		)
+		schemaConfig := fq.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -103,6 +106,8 @@ func (fq *FileQuery) QueryType() *FileTypeQuery {
 			sqlgraph.To(filetype.Table, filetype.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, file.TypeTable, file.TypeColumn),
 		)
+		schemaConfig := fq.schemaConfig
+		step.To.Schema = schemaConfig.FileType
 		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -125,6 +130,8 @@ func (fq *FileQuery) QueryField() *FieldTypeQuery {
 			sqlgraph.To(fieldtype.Table, fieldtype.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, file.FieldTable, file.FieldColumn),
 		)
+		schemaConfig := fq.schemaConfig
+		step.To.Schema = schemaConfig.FieldType
 		fromU = sqlgraph.SetNeighbors(fq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -445,6 +452,8 @@ func (fq *FileQuery) sqlAll(ctx context.Context) ([]*File, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = fq.schemaConfig.File
+	ctx = internal.NewSchemaConfigContext(ctx, fq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, fq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -600,6 +609,7 @@ func (fq *FileQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = fq.sql
 		selector.Select(selector.Columns(file.Columns...)...)
 	}
+	t1.Schema(fq.schemaConfig.File)
 	for _, p := range fq.predicates {
 		p(selector)
 	}

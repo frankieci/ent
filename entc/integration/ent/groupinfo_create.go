@@ -152,6 +152,7 @@ func (gic *GroupInfoCreate) createSpec() (*GroupInfo, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = gic.schemaConfig.GroupInfo
 	if value, ok := gic.mutation.Desc(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -182,6 +183,7 @@ func (gic *GroupInfoCreate) createSpec() (*GroupInfo, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = gic.schemaConfig.GroupInfo
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}

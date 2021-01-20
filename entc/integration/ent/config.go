@@ -9,6 +9,7 @@ package ent
 import (
 	"github.com/facebook/ent"
 	"github.com/facebook/ent/dialect"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 )
 
 // Option function to configure the client.
@@ -24,6 +25,8 @@ type config struct {
 	log func(...interface{})
 	// hooks to execute on mutations.
 	hooks *hooks
+
+	schemaConfig SchemaConfig
 }
 
 // hooks per client, for fast access.
@@ -72,5 +75,17 @@ func Log(fn func(...interface{})) Option {
 func Driver(driver dialect.Driver) Option {
 	return func(c *config) {
 		c.driver = driver
+	}
+}
+
+// SchemaConfig represents alternative schema names for all tables
+// that can be passed at runtime.
+type SchemaConfig = internal.SchemaConfig
+
+// AlternateSchemas allows alternate schema names to be
+// passed into ent operations.
+func AlternateSchema(schemaConfig SchemaConfig) Option {
+	return func(c *config) {
+		c.schemaConfig = schemaConfig
 	}
 }

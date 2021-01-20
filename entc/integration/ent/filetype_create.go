@@ -183,6 +183,7 @@ func (ftc *FileTypeCreate) createSpec() (*FileType, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = ftc.schemaConfig.FileType
 	if value, ok := ftc.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -221,6 +222,7 @@ func (ftc *FileTypeCreate) createSpec() (*FileType, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = ftc.schemaConfig.FileType
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}

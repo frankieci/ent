@@ -12,6 +12,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/pet"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/user"
@@ -208,6 +209,7 @@ func (pu *PetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = pu.schemaConfig.Pet
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := pu.mutation.TeamIDs(); len(nodes) > 0 {
@@ -224,6 +226,7 @@ func (pu *PetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = pu.schemaConfig.Pet
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -243,6 +246,7 @@ func (pu *PetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = pu.schemaConfig.Pet
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := pu.mutation.OwnerIDs(); len(nodes) > 0 {
@@ -259,11 +263,14 @@ func (pu *PetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = pu.schemaConfig.Pet
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = pu.schemaConfig.Pet
+	ctx = internal.NewSchemaConfigContext(ctx, pu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{pet.Label}
@@ -456,6 +463,7 @@ func (puo *PetUpdateOne) sqlSave(ctx context.Context) (_node *Pet, err error) {
 				},
 			},
 		}
+		edge.Schema = puo.schemaConfig.Pet
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := puo.mutation.TeamIDs(); len(nodes) > 0 {
@@ -472,6 +480,7 @@ func (puo *PetUpdateOne) sqlSave(ctx context.Context) (_node *Pet, err error) {
 				},
 			},
 		}
+		edge.Schema = puo.schemaConfig.Pet
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -491,6 +500,7 @@ func (puo *PetUpdateOne) sqlSave(ctx context.Context) (_node *Pet, err error) {
 				},
 			},
 		}
+		edge.Schema = puo.schemaConfig.Pet
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := puo.mutation.OwnerIDs(); len(nodes) > 0 {
@@ -507,11 +517,14 @@ func (puo *PetUpdateOne) sqlSave(ctx context.Context) (_node *Pet, err error) {
 				},
 			},
 		}
+		edge.Schema = puo.schemaConfig.Pet
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = puo.schemaConfig.Pet
+	ctx = internal.NewSchemaConfigContext(ctx, puo.schemaConfig)
 	_node = &Pet{config: puo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

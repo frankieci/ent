@@ -16,6 +16,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/card"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/spec"
 	"github.com/facebook/ent/entc/integration/ent/user"
@@ -79,6 +80,8 @@ func (cq *CardQuery) QueryOwner() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, card.OwnerTable, card.OwnerColumn),
 		)
+		schemaConfig := cq.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -101,6 +104,9 @@ func (cq *CardQuery) QuerySpec() *SpecQuery {
 			sqlgraph.To(spec.Table, spec.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, card.SpecTable, card.SpecPrimaryKey...),
 		)
+		schemaConfig := cq.schemaConfig
+		step.To.Schema = schemaConfig.Spec
+		step.Edge.Schema = schemaConfig.SpecCard
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -408,6 +414,8 @@ func (cq *CardQuery) sqlAll(ctx context.Context) ([]*Card, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = cq.schemaConfig.Card
+	ctx = internal.NewSchemaConfigContext(ctx, cq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, cq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -485,6 +493,8 @@ func (cq *CardQuery) sqlAll(ctx context.Context) ([]*Card, error) {
 				return nil
 			},
 		}
+		_spec.Edge.Schema = cq.schemaConfig.Card
+		ctx = internal.NewSchemaConfigContext(ctx, cq.schemaConfig)
 		if err := sqlgraph.QueryEdges(ctx, cq.driver, _spec); err != nil {
 			return nil, fmt.Errorf(`query edges "spec": %v`, err)
 		}
@@ -573,6 +583,7 @@ func (cq *CardQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = cq.sql
 		selector.Select(selector.Columns(card.Columns...)...)
 	}
+	t1.Schema(cq.schemaConfig.Card)
 	for _, p := range cq.predicates {
 		p(selector)
 	}

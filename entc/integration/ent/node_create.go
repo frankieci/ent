@@ -152,6 +152,7 @@ func (nc *NodeCreate) createSpec() (*Node, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = nc.schemaConfig.Node
 	if value, ok := nc.mutation.Value(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
@@ -174,6 +175,7 @@ func (nc *NodeCreate) createSpec() (*Node, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = nc.schemaConfig.Node
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -193,6 +195,7 @@ func (nc *NodeCreate) createSpec() (*Node, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = nc.schemaConfig.Node
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}

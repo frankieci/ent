@@ -15,6 +15,7 @@ import (
 	"github.com/facebook/ent/entc/integration/ent/card"
 	"github.com/facebook/ent/entc/integration/ent/file"
 	"github.com/facebook/ent/entc/integration/ent/group"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/pet"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/user"
@@ -789,6 +790,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.CardIDs(); len(nodes) > 0 {
@@ -805,6 +807,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -824,6 +827,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.RemovedPetsIDs(); len(nodes) > 0 && !uu.mutation.PetsCleared() {
@@ -840,6 +844,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -859,6 +864,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -878,6 +884,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.RemovedFilesIDs(); len(nodes) > 0 && !uu.mutation.FilesCleared() {
@@ -894,6 +901,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -913,6 +921,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -932,6 +941,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.RemovedGroupsIDs(); len(nodes) > 0 && !uu.mutation.GroupsCleared() {
@@ -948,6 +958,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -967,6 +978,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -986,6 +998,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.RemovedFriendsIDs(); len(nodes) > 0 && !uu.mutation.FriendsCleared() {
@@ -1002,6 +1015,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1021,6 +1035,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1040,6 +1055,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.RemovedFollowersIDs(); len(nodes) > 0 && !uu.mutation.FollowersCleared() {
@@ -1056,6 +1072,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1075,6 +1092,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1094,6 +1112,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.RemovedFollowingIDs(); len(nodes) > 0 && !uu.mutation.FollowingCleared() {
@@ -1110,6 +1129,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1129,6 +1149,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1148,6 +1169,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.TeamIDs(); len(nodes) > 0 {
@@ -1164,6 +1186,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1183,6 +1206,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.SpouseIDs(); len(nodes) > 0 {
@@ -1199,6 +1223,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1218,6 +1243,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !uu.mutation.ChildrenCleared() {
@@ -1234,6 +1260,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1253,6 +1280,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1272,6 +1300,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uu.mutation.ParentIDs(); len(nodes) > 0 {
@@ -1288,11 +1317,14 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = uu.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = uu.schemaConfig.User
+	ctx = internal.NewSchemaConfigContext(ctx, uu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -2064,6 +2096,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.CardIDs(); len(nodes) > 0 {
@@ -2080,6 +2113,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2099,6 +2133,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.RemovedPetsIDs(); len(nodes) > 0 && !uuo.mutation.PetsCleared() {
@@ -2115,6 +2150,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2134,6 +2170,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2153,6 +2190,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.RemovedFilesIDs(); len(nodes) > 0 && !uuo.mutation.FilesCleared() {
@@ -2169,6 +2207,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2188,6 +2227,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2207,6 +2247,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.RemovedGroupsIDs(); len(nodes) > 0 && !uuo.mutation.GroupsCleared() {
@@ -2223,6 +2264,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2242,6 +2284,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2261,6 +2304,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.RemovedFriendsIDs(); len(nodes) > 0 && !uuo.mutation.FriendsCleared() {
@@ -2277,6 +2321,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2296,6 +2341,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2315,6 +2361,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.RemovedFollowersIDs(); len(nodes) > 0 && !uuo.mutation.FollowersCleared() {
@@ -2331,6 +2378,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2350,6 +2398,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2369,6 +2418,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.RemovedFollowingIDs(); len(nodes) > 0 && !uuo.mutation.FollowingCleared() {
@@ -2385,6 +2435,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2404,6 +2455,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2423,6 +2475,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.TeamIDs(); len(nodes) > 0 {
@@ -2439,6 +2492,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2458,6 +2512,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.SpouseIDs(); len(nodes) > 0 {
@@ -2474,6 +2529,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2493,6 +2549,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.RemovedChildrenIDs(); len(nodes) > 0 && !uuo.mutation.ChildrenCleared() {
@@ -2509,6 +2566,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2528,6 +2586,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -2547,6 +2606,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := uuo.mutation.ParentIDs(); len(nodes) > 0 {
@@ -2563,11 +2623,14 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 				},
 			},
 		}
+		edge.Schema = uuo.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = uuo.schemaConfig.User
+	ctx = internal.NewSchemaConfigContext(ctx, uuo.schemaConfig)
 	_node = &User{config: uuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

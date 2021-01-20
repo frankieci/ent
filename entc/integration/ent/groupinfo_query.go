@@ -17,6 +17,7 @@ import (
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/group"
 	"github.com/facebook/ent/entc/integration/ent/groupinfo"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -76,6 +77,8 @@ func (giq *GroupInfoQuery) QueryGroups() *GroupQuery {
 			sqlgraph.To(group.Table, group.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, groupinfo.GroupsTable, groupinfo.GroupsColumn),
 		)
+		schemaConfig := giq.schemaConfig
+		step.To.Schema = schemaConfig.Group
 		fromU = sqlgraph.SetNeighbors(giq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -363,6 +366,8 @@ func (giq *GroupInfoQuery) sqlAll(ctx context.Context) ([]*GroupInfo, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = giq.schemaConfig.GroupInfo
+	ctx = internal.NewSchemaConfigContext(ctx, giq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, giq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -468,6 +473,7 @@ func (giq *GroupInfoQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = giq.sql
 		selector.Select(selector.Columns(groupinfo.Columns...)...)
 	}
+	t1.Schema(giq.schemaConfig.GroupInfo)
 	for _, p := range giq.predicates {
 		p(selector)
 	}

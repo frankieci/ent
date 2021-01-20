@@ -133,6 +133,7 @@ func (cc *CommentCreate) createSpec() (*Comment, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = cc.schemaConfig.Comment
 	if value, ok := cc.mutation.UniqueInt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,

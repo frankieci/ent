@@ -15,6 +15,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/node"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
@@ -77,6 +78,8 @@ func (nq *NodeQuery) QueryPrev() *NodeQuery {
 			sqlgraph.To(node.Table, node.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, node.PrevTable, node.PrevColumn),
 		)
+		schemaConfig := nq.schemaConfig
+		step.To.Schema = schemaConfig.Node
 		fromU = sqlgraph.SetNeighbors(nq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -99,6 +102,8 @@ func (nq *NodeQuery) QueryNext() *NodeQuery {
 			sqlgraph.To(node.Table, node.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, node.NextTable, node.NextColumn),
 		)
+		schemaConfig := nq.schemaConfig
+		step.To.Schema = schemaConfig.Node
 		fromU = sqlgraph.SetNeighbors(nq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -406,6 +411,8 @@ func (nq *NodeQuery) sqlAll(ctx context.Context) ([]*Node, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = nq.schemaConfig.Node
+	ctx = internal.NewSchemaConfigContext(ctx, nq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, nq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -535,6 +542,7 @@ func (nq *NodeQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = nq.sql
 		selector.Select(selector.Columns(node.Columns...)...)
 	}
+	t1.Schema(nq.schemaConfig.Node)
 	for _, p := range nq.predicates {
 		p(selector)
 	}

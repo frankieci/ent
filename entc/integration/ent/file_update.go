@@ -15,6 +15,7 @@ import (
 	"github.com/facebook/ent/entc/integration/ent/fieldtype"
 	"github.com/facebook/ent/entc/integration/ent/file"
 	"github.com/facebook/ent/entc/integration/ent/filetype"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/user"
 	"github.com/facebook/ent/schema/field"
@@ -370,6 +371,7 @@ func (fu *FileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = fu.schemaConfig.File
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fu.mutation.OwnerIDs(); len(nodes) > 0 {
@@ -386,6 +388,7 @@ func (fu *FileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = fu.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -405,6 +408,7 @@ func (fu *FileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = fu.schemaConfig.File
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fu.mutation.TypeIDs(); len(nodes) > 0 {
@@ -421,6 +425,7 @@ func (fu *FileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = fu.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -440,6 +445,7 @@ func (fu *FileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = fu.schemaConfig.File
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fu.mutation.RemovedFieldIDs(); len(nodes) > 0 && !fu.mutation.FieldEdgeCleared() {
@@ -456,6 +462,7 @@ func (fu *FileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = fu.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -475,11 +482,14 @@ func (fu *FileUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = fu.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = fu.schemaConfig.File
+	ctx = internal.NewSchemaConfigContext(ctx, fu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, fu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{file.Label}
@@ -833,6 +843,7 @@ func (fuo *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) 
 				},
 			},
 		}
+		edge.Schema = fuo.schemaConfig.File
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fuo.mutation.OwnerIDs(); len(nodes) > 0 {
@@ -849,6 +860,7 @@ func (fuo *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) 
 				},
 			},
 		}
+		edge.Schema = fuo.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -868,6 +880,7 @@ func (fuo *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) 
 				},
 			},
 		}
+		edge.Schema = fuo.schemaConfig.File
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fuo.mutation.TypeIDs(); len(nodes) > 0 {
@@ -884,6 +897,7 @@ func (fuo *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) 
 				},
 			},
 		}
+		edge.Schema = fuo.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -903,6 +917,7 @@ func (fuo *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) 
 				},
 			},
 		}
+		edge.Schema = fuo.schemaConfig.File
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := fuo.mutation.RemovedFieldIDs(); len(nodes) > 0 && !fuo.mutation.FieldEdgeCleared() {
@@ -919,6 +934,7 @@ func (fuo *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) 
 				},
 			},
 		}
+		edge.Schema = fuo.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -938,11 +954,14 @@ func (fuo *FileUpdateOne) sqlSave(ctx context.Context) (_node *File, err error) 
 				},
 			},
 		}
+		edge.Schema = fuo.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = fuo.schemaConfig.File
+	ctx = internal.NewSchemaConfigContext(ctx, fuo.schemaConfig)
 	_node = &File{config: fuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

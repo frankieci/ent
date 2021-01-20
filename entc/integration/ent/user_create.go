@@ -449,6 +449,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = uc.schemaConfig.User
 	if value, ok := uc.mutation.OptionalInt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
@@ -543,6 +544,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -562,6 +564,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -581,6 +584,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -600,6 +604,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -619,6 +624,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -638,6 +644,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -657,6 +664,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -676,6 +684,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -695,6 +704,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -714,6 +724,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -733,6 +744,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = uc.schemaConfig.User
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}

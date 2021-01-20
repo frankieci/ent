@@ -12,6 +12,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/pet"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
@@ -78,6 +79,8 @@ func (pd *PetDelete) sqlExec(ctx context.Context) (int, error) {
 			},
 		},
 	}
+	_spec.Node.Schema = pd.schemaConfig.Pet
+	ctx = internal.NewSchemaConfigContext(ctx, pd.schemaConfig)
 	if ps := pd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

@@ -14,6 +14,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/item"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
@@ -297,6 +298,8 @@ func (iq *ItemQuery) sqlAll(ctx context.Context) ([]*Item, error) {
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = iq.schemaConfig.Item
+	ctx = internal.NewSchemaConfigContext(ctx, iq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, iq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -372,6 +375,7 @@ func (iq *ItemQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = iq.sql
 		selector.Select(selector.Columns(item.Columns...)...)
 	}
+	t1.Schema(iq.schemaConfig.Item)
 	for _, p := range iq.predicates {
 		p(selector)
 	}

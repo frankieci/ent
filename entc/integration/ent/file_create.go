@@ -239,6 +239,7 @@ func (fc *FileCreate) createSpec() (*File, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = fc.schemaConfig.File
 	if value, ok := fc.mutation.Size(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
@@ -293,6 +294,7 @@ func (fc *FileCreate) createSpec() (*File, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = fc.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -312,6 +314,7 @@ func (fc *FileCreate) createSpec() (*File, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = fc.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -331,6 +334,7 @@ func (fc *FileCreate) createSpec() (*File, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = fc.schemaConfig.File
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}

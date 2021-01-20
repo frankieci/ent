@@ -14,6 +14,7 @@ import (
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/group"
 	"github.com/facebook/ent/entc/integration/ent/groupinfo"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -203,6 +204,7 @@ func (giu *GroupInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = giu.schemaConfig.GroupInfo
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := giu.mutation.RemovedGroupsIDs(); len(nodes) > 0 && !giu.mutation.GroupsCleared() {
@@ -219,6 +221,7 @@ func (giu *GroupInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = giu.schemaConfig.GroupInfo
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -238,11 +241,14 @@ func (giu *GroupInfoUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = giu.schemaConfig.GroupInfo
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = giu.schemaConfig.GroupInfo
+	ctx = internal.NewSchemaConfigContext(ctx, giu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, giu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{groupinfo.Label}
@@ -431,6 +437,7 @@ func (giuo *GroupInfoUpdateOne) sqlSave(ctx context.Context) (_node *GroupInfo, 
 				},
 			},
 		}
+		edge.Schema = giuo.schemaConfig.GroupInfo
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := giuo.mutation.RemovedGroupsIDs(); len(nodes) > 0 && !giuo.mutation.GroupsCleared() {
@@ -447,6 +454,7 @@ func (giuo *GroupInfoUpdateOne) sqlSave(ctx context.Context) (_node *GroupInfo, 
 				},
 			},
 		}
+		edge.Schema = giuo.schemaConfig.GroupInfo
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -466,11 +474,14 @@ func (giuo *GroupInfoUpdateOne) sqlSave(ctx context.Context) (_node *GroupInfo, 
 				},
 			},
 		}
+		edge.Schema = giuo.schemaConfig.GroupInfo
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = giuo.schemaConfig.GroupInfo
+	ctx = internal.NewSchemaConfigContext(ctx, giuo.schemaConfig)
 	_node = &GroupInfo{config: giuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

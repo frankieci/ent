@@ -14,6 +14,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/task"
 	"github.com/facebook/ent/schema/field"
@@ -321,6 +322,8 @@ func (tq *TaskQuery) sqlAll(ctx context.Context) ([]*Task, error) {
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = tq.schemaConfig.Task
+	ctx = internal.NewSchemaConfigContext(ctx, tq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, tq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -396,6 +399,7 @@ func (tq *TaskQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = tq.sql
 		selector.Select(selector.Columns(task.Columns...)...)
 	}
+	t1.Schema(tq.schemaConfig.Task)
 	for _, p := range tq.predicates {
 		p(selector)
 	}

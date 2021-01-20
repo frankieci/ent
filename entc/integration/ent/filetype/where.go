@@ -9,6 +9,7 @@ package filetype
 import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 )
 
@@ -317,6 +318,8 @@ func HasFiles() predicate.FileType {
 			sqlgraph.To(FilesTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, FilesTable, FilesColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.File
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -329,6 +332,8 @@ func HasFilesWith(preds ...predicate.File) predicate.FileType {
 			sqlgraph.To(FilesInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, FilesTable, FilesColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.File
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

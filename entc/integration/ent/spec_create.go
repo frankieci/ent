@@ -116,6 +116,7 @@ func (sc *SpecCreate) createSpec() (*Spec, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = sc.schemaConfig.Spec
 	if nodes := sc.mutation.CardIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -130,6 +131,7 @@ func (sc *SpecCreate) createSpec() (*Spec, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = sc.schemaConfig.Spec
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}

@@ -9,6 +9,7 @@ package pet
 import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/google/uuid"
 )
@@ -319,6 +320,8 @@ func HasTeam() predicate.Pet {
 			sqlgraph.To(TeamTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, TeamTable, TeamColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -331,6 +334,8 @@ func HasTeamWith(preds ...predicate.User) predicate.Pet {
 			sqlgraph.To(TeamInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, TeamTable, TeamColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -347,6 +352,8 @@ func HasOwner() predicate.Pet {
 			sqlgraph.To(OwnerTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, OwnerTable, OwnerColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -359,6 +366,8 @@ func HasOwnerWith(preds ...predicate.User) predicate.Pet {
 			sqlgraph.To(OwnerInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, OwnerTable, OwnerColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

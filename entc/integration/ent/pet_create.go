@@ -156,6 +156,7 @@ func (pc *PetCreate) createSpec() (*Pet, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = pc.schemaConfig.Pet
 	if value, ok := pc.mutation.Name(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -186,6 +187,7 @@ func (pc *PetCreate) createSpec() (*Pet, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = pc.schemaConfig.Pet
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -205,6 +207,7 @@ func (pc *PetCreate) createSpec() (*Pet, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = pc.schemaConfig.Pet
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}

@@ -218,6 +218,7 @@ func (cc *CardCreate) createSpec() (*Card, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = cc.schemaConfig.Card
 	if value, ok := cc.mutation.CreateTime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
@@ -264,6 +265,7 @@ func (cc *CardCreate) createSpec() (*Card, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = cc.schemaConfig.Card
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -283,6 +285,7 @@ func (cc *CardCreate) createSpec() (*Card, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = cc.schemaConfig.Card
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}

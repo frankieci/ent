@@ -9,6 +9,7 @@ package node
 import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 )
 
@@ -200,6 +201,8 @@ func HasPrev() predicate.Node {
 			sqlgraph.To(PrevTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, PrevTable, PrevColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Node
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -212,6 +215,8 @@ func HasPrevWith(preds ...predicate.Node) predicate.Node {
 			sqlgraph.To(Table, FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, PrevTable, PrevColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Node
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -228,6 +233,8 @@ func HasNext() predicate.Node {
 			sqlgraph.To(NextTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, NextTable, NextColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Node
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -240,6 +247,8 @@ func HasNextWith(preds ...predicate.Node) predicate.Node {
 			sqlgraph.To(Table, FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, NextTable, NextColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Node
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

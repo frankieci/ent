@@ -13,6 +13,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/comment"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -205,6 +206,8 @@ func (cu *CommentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: comment.FieldNillableInt,
 		})
 	}
+	_spec.Node.Schema = cu.schemaConfig.Comment
+	ctx = internal.NewSchemaConfigContext(ctx, cu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{comment.Label}
@@ -396,6 +399,8 @@ func (cuo *CommentUpdateOne) sqlSave(ctx context.Context) (_node *Comment, err e
 			Column: comment.FieldNillableInt,
 		})
 	}
+	_spec.Node.Schema = cuo.schemaConfig.Comment
+	ctx = internal.NewSchemaConfigContext(ctx, cuo.schemaConfig)
 	_node = &Comment{config: cuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

@@ -17,6 +17,7 @@ import (
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/file"
 	"github.com/facebook/ent/entc/integration/ent/filetype"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -76,6 +77,8 @@ func (ftq *FileTypeQuery) QueryFiles() *FileQuery {
 			sqlgraph.To(file.Table, file.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, filetype.FilesTable, filetype.FilesColumn),
 		)
+		schemaConfig := ftq.schemaConfig
+		step.To.Schema = schemaConfig.File
 		fromU = sqlgraph.SetNeighbors(ftq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -363,6 +366,8 @@ func (ftq *FileTypeQuery) sqlAll(ctx context.Context) ([]*FileType, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = ftq.schemaConfig.FileType
+	ctx = internal.NewSchemaConfigContext(ctx, ftq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, ftq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -468,6 +473,7 @@ func (ftq *FileTypeQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = ftq.sql
 		selector.Select(selector.Columns(filetype.Columns...)...)
 	}
+	t1.Schema(ftq.schemaConfig.FileType)
 	for _, p := range ftq.predicates {
 		p(selector)
 	}

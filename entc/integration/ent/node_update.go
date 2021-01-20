@@ -12,6 +12,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/node"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
@@ -215,6 +216,7 @@ func (nu *NodeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = nu.schemaConfig.Node
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := nu.mutation.PrevIDs(); len(nodes) > 0 {
@@ -231,6 +233,7 @@ func (nu *NodeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = nu.schemaConfig.Node
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -250,6 +253,7 @@ func (nu *NodeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = nu.schemaConfig.Node
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := nu.mutation.NextIDs(); len(nodes) > 0 {
@@ -266,11 +270,14 @@ func (nu *NodeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = nu.schemaConfig.Node
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = nu.schemaConfig.Node
+	ctx = internal.NewSchemaConfigContext(ctx, nu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, nu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{node.Label}
@@ -472,6 +479,7 @@ func (nuo *NodeUpdateOne) sqlSave(ctx context.Context) (_node *Node, err error) 
 				},
 			},
 		}
+		edge.Schema = nuo.schemaConfig.Node
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := nuo.mutation.PrevIDs(); len(nodes) > 0 {
@@ -488,6 +496,7 @@ func (nuo *NodeUpdateOne) sqlSave(ctx context.Context) (_node *Node, err error) 
 				},
 			},
 		}
+		edge.Schema = nuo.schemaConfig.Node
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -507,6 +516,7 @@ func (nuo *NodeUpdateOne) sqlSave(ctx context.Context) (_node *Node, err error) 
 				},
 			},
 		}
+		edge.Schema = nuo.schemaConfig.Node
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := nuo.mutation.NextIDs(); len(nodes) > 0 {
@@ -523,11 +533,14 @@ func (nuo *NodeUpdateOne) sqlSave(ctx context.Context) (_node *Node, err error) 
 				},
 			},
 		}
+		edge.Schema = nuo.schemaConfig.Node
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = nuo.schemaConfig.Node
+	ctx = internal.NewSchemaConfigContext(ctx, nuo.schemaConfig)
 	_node = &Node{config: nuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

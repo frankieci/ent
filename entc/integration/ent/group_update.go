@@ -17,6 +17,7 @@ import (
 	"github.com/facebook/ent/entc/integration/ent/file"
 	"github.com/facebook/ent/entc/integration/ent/group"
 	"github.com/facebook/ent/entc/integration/ent/groupinfo"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/user"
 	"github.com/facebook/ent/schema/field"
@@ -404,6 +405,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := gu.mutation.RemovedFilesIDs(); len(nodes) > 0 && !gu.mutation.FilesCleared() {
@@ -420,6 +422,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -439,6 +442,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -458,6 +462,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := gu.mutation.RemovedBlockedIDs(); len(nodes) > 0 && !gu.mutation.BlockedCleared() {
@@ -474,6 +479,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -493,6 +499,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -512,6 +519,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := gu.mutation.RemovedUsersIDs(); len(nodes) > 0 && !gu.mutation.UsersCleared() {
@@ -528,6 +536,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -547,6 +556,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -566,6 +576,7 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := gu.mutation.InfoIDs(); len(nodes) > 0 {
@@ -582,11 +593,14 @@ func (gu *GroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = gu.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = gu.schemaConfig.Group
+	ctx = internal.NewSchemaConfigContext(ctx, gu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, gu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{group.Label}
@@ -972,6 +986,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := guo.mutation.RemovedFilesIDs(); len(nodes) > 0 && !guo.mutation.FilesCleared() {
@@ -988,6 +1003,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1007,6 +1023,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1026,6 +1043,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := guo.mutation.RemovedBlockedIDs(); len(nodes) > 0 && !guo.mutation.BlockedCleared() {
@@ -1042,6 +1060,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1061,6 +1080,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1080,6 +1100,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := guo.mutation.RemovedUsersIDs(); len(nodes) > 0 && !guo.mutation.UsersCleared() {
@@ -1096,6 +1117,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1115,6 +1137,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -1134,6 +1157,7 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := guo.mutation.InfoIDs(); len(nodes) > 0 {
@@ -1150,11 +1174,14 @@ func (guo *GroupUpdateOne) sqlSave(ctx context.Context) (_node *Group, err error
 				},
 			},
 		}
+		edge.Schema = guo.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = guo.schemaConfig.Group
+	ctx = internal.NewSchemaConfigContext(ctx, guo.schemaConfig)
 	_node = &Group{config: guo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

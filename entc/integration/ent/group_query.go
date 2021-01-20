@@ -18,6 +18,7 @@ import (
 	"github.com/facebook/ent/entc/integration/ent/file"
 	"github.com/facebook/ent/entc/integration/ent/group"
 	"github.com/facebook/ent/entc/integration/ent/groupinfo"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/user"
 	"github.com/facebook/ent/schema/field"
@@ -82,6 +83,8 @@ func (gq *GroupQuery) QueryFiles() *FileQuery {
 			sqlgraph.To(file.Table, file.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, group.FilesTable, group.FilesColumn),
 		)
+		schemaConfig := gq.schemaConfig
+		step.To.Schema = schemaConfig.File
 		fromU = sqlgraph.SetNeighbors(gq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -104,6 +107,8 @@ func (gq *GroupQuery) QueryBlocked() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, group.BlockedTable, group.BlockedColumn),
 		)
+		schemaConfig := gq.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromU = sqlgraph.SetNeighbors(gq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -126,6 +131,9 @@ func (gq *GroupQuery) QueryUsers() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, group.UsersTable, group.UsersPrimaryKey...),
 		)
+		schemaConfig := gq.schemaConfig
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserGroups
 		fromU = sqlgraph.SetNeighbors(gq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -148,6 +156,8 @@ func (gq *GroupQuery) QueryInfo() *GroupInfoQuery {
 			sqlgraph.To(groupinfo.Table, groupinfo.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, group.InfoTable, group.InfoColumn),
 		)
+		schemaConfig := gq.schemaConfig
+		step.To.Schema = schemaConfig.GroupInfo
 		fromU = sqlgraph.SetNeighbors(gq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -481,6 +491,8 @@ func (gq *GroupQuery) sqlAll(ctx context.Context) ([]*Group, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = gq.schemaConfig.Group
+	ctx = internal.NewSchemaConfigContext(ctx, gq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, gq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -591,6 +603,8 @@ func (gq *GroupQuery) sqlAll(ctx context.Context) ([]*Group, error) {
 				return nil
 			},
 		}
+		_spec.Edge.Schema = gq.schemaConfig.Group
+		ctx = internal.NewSchemaConfigContext(ctx, gq.schemaConfig)
 		if err := sqlgraph.QueryEdges(ctx, gq.driver, _spec); err != nil {
 			return nil, fmt.Errorf(`query edges "users": %v`, err)
 		}
@@ -704,6 +718,7 @@ func (gq *GroupQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = gq.sql
 		selector.Select(selector.Columns(group.Columns...)...)
 	}
+	t1.Schema(gq.schemaConfig.Group)
 	for _, p := range gq.predicates {
 		p(selector)
 	}

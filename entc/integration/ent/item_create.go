@@ -100,6 +100,7 @@ func (ic *ItemCreate) createSpec() (*Item, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = ic.schemaConfig.Item
 	return _node, _spec
 }
 

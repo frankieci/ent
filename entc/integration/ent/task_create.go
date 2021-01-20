@@ -133,6 +133,7 @@ func (tc *TaskCreate) createSpec() (*Task, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = tc.schemaConfig.Task
 	if value, ok := tc.mutation.Priority(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,

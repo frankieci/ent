@@ -16,6 +16,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/card"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/spec"
 	"github.com/facebook/ent/schema/field"
@@ -76,6 +77,9 @@ func (sq *SpecQuery) QueryCard() *CardQuery {
 			sqlgraph.To(card.Table, card.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, spec.CardTable, spec.CardPrimaryKey...),
 		)
+		schemaConfig := sq.schemaConfig
+		step.To.Schema = schemaConfig.Card
+		step.Edge.Schema = schemaConfig.SpecCard
 		fromU = sqlgraph.SetNeighbors(sq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -339,6 +343,8 @@ func (sq *SpecQuery) sqlAll(ctx context.Context) ([]*Spec, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = sq.schemaConfig.Spec
+	ctx = internal.NewSchemaConfigContext(ctx, sq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, sq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -391,6 +397,8 @@ func (sq *SpecQuery) sqlAll(ctx context.Context) ([]*Spec, error) {
 				return nil
 			},
 		}
+		_spec.Edge.Schema = sq.schemaConfig.Spec
+		ctx = internal.NewSchemaConfigContext(ctx, sq.schemaConfig)
 		if err := sqlgraph.QueryEdges(ctx, sq.driver, _spec); err != nil {
 			return nil, fmt.Errorf(`query edges "card": %v`, err)
 		}
@@ -479,6 +487,7 @@ func (sq *SpecQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = sq.sql
 		selector.Select(selector.Columns(spec.Columns...)...)
 	}
+	t1.Schema(sq.schemaConfig.Spec)
 	for _, p := range sq.predicates {
 		p(selector)
 	}

@@ -18,6 +18,7 @@ import (
 	"github.com/facebook/ent/entc/integration/ent/card"
 	"github.com/facebook/ent/entc/integration/ent/file"
 	"github.com/facebook/ent/entc/integration/ent/group"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/pet"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/user"
@@ -90,6 +91,8 @@ func (uq *UserQuery) QueryCard() *CardQuery {
 			sqlgraph.To(card.Table, card.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, user.CardTable, user.CardColumn),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.Card
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -112,6 +115,8 @@ func (uq *UserQuery) QueryPets() *PetQuery {
 			sqlgraph.To(pet.Table, pet.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.PetsTable, user.PetsColumn),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.Pet
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -134,6 +139,8 @@ func (uq *UserQuery) QueryFiles() *FileQuery {
 			sqlgraph.To(file.Table, file.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.FilesTable, user.FilesColumn),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.File
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -156,6 +163,9 @@ func (uq *UserQuery) QueryGroups() *GroupQuery {
 			sqlgraph.To(group.Table, group.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.GroupsTable, user.GroupsPrimaryKey...),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.Group
+		step.Edge.Schema = schemaConfig.UserGroups
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -178,6 +188,9 @@ func (uq *UserQuery) QueryFriends() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.FriendsTable, user.FriendsPrimaryKey...),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserFriends
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -200,6 +213,9 @@ func (uq *UserQuery) QueryFollowers() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, user.FollowersTable, user.FollowersPrimaryKey...),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserFollowing
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -222,6 +238,9 @@ func (uq *UserQuery) QueryFollowing() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.FollowingTable, user.FollowingPrimaryKey...),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserFollowing
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -244,6 +263,8 @@ func (uq *UserQuery) QueryTeam() *PetQuery {
 			sqlgraph.To(pet.Table, pet.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, user.TeamTable, user.TeamColumn),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.Pet
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -266,6 +287,8 @@ func (uq *UserQuery) QuerySpouse() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, false, user.SpouseTable, user.SpouseColumn),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -288,6 +311,8 @@ func (uq *UserQuery) QueryChildren() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, user.ChildrenTable, user.ChildrenColumn),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -310,6 +335,8 @@ func (uq *UserQuery) QueryParent() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, user.ParentTable, user.ParentColumn),
 		)
+		schemaConfig := uq.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -734,6 +761,8 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = uq.schemaConfig.User
+	ctx = internal.NewSchemaConfigContext(ctx, uq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, uq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -872,6 +901,8 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 				return nil
 			},
 		}
+		_spec.Edge.Schema = uq.schemaConfig.User
+		ctx = internal.NewSchemaConfigContext(ctx, uq.schemaConfig)
 		if err := sqlgraph.QueryEdges(ctx, uq.driver, _spec); err != nil {
 			return nil, fmt.Errorf(`query edges "groups": %v`, err)
 		}
@@ -936,6 +967,8 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 				return nil
 			},
 		}
+		_spec.Edge.Schema = uq.schemaConfig.User
+		ctx = internal.NewSchemaConfigContext(ctx, uq.schemaConfig)
 		if err := sqlgraph.QueryEdges(ctx, uq.driver, _spec); err != nil {
 			return nil, fmt.Errorf(`query edges "friends": %v`, err)
 		}
@@ -1000,6 +1033,8 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 				return nil
 			},
 		}
+		_spec.Edge.Schema = uq.schemaConfig.User
+		ctx = internal.NewSchemaConfigContext(ctx, uq.schemaConfig)
 		if err := sqlgraph.QueryEdges(ctx, uq.driver, _spec); err != nil {
 			return nil, fmt.Errorf(`query edges "followers": %v`, err)
 		}
@@ -1064,6 +1099,8 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 				return nil
 			},
 		}
+		_spec.Edge.Schema = uq.schemaConfig.User
+		ctx = internal.NewSchemaConfigContext(ctx, uq.schemaConfig)
 		if err := sqlgraph.QueryEdges(ctx, uq.driver, _spec); err != nil {
 			return nil, fmt.Errorf(`query edges "following": %v`, err)
 		}
@@ -1259,6 +1296,7 @@ func (uq *UserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = uq.sql
 		selector.Select(selector.Columns(user.Columns...)...)
 	}
+	t1.Schema(uq.schemaConfig.User)
 	for _, p := range uq.predicates {
 		p(selector)
 	}

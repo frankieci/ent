@@ -13,6 +13,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/card"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -78,6 +79,8 @@ func (cd *CardDelete) sqlExec(ctx context.Context) (int, error) {
 			},
 		},
 	}
+	_spec.Node.Schema = cd.schemaConfig.Card
+	ctx = internal.NewSchemaConfigContext(ctx, cd.schemaConfig)
 	if ps := cd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {

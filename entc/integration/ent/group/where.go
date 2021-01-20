@@ -11,6 +11,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 )
 
@@ -556,6 +557,8 @@ func HasFiles() predicate.Group {
 			sqlgraph.To(FilesTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, FilesTable, FilesColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.File
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -568,6 +571,8 @@ func HasFilesWith(preds ...predicate.File) predicate.Group {
 			sqlgraph.To(FilesInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, FilesTable, FilesColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.File
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -584,6 +589,8 @@ func HasBlocked() predicate.Group {
 			sqlgraph.To(BlockedTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, BlockedTable, BlockedColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -596,6 +603,8 @@ func HasBlockedWith(preds ...predicate.User) predicate.Group {
 			sqlgraph.To(BlockedInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, BlockedTable, BlockedColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -612,6 +621,9 @@ func HasUsers() predicate.Group {
 			sqlgraph.To(UsersTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, UsersTable, UsersPrimaryKey...),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserGroups
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -624,6 +636,9 @@ func HasUsersWith(preds ...predicate.User) predicate.Group {
 			sqlgraph.To(UsersInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, UsersTable, UsersPrimaryKey...),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
+		step.Edge.Schema = schemaConfig.UserGroups
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -640,6 +655,8 @@ func HasInfo() predicate.Group {
 			sqlgraph.To(InfoTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, InfoTable, InfoColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.GroupInfo
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -652,6 +669,8 @@ func HasInfoWith(preds ...predicate.GroupInfo) predicate.Group {
 			sqlgraph.To(InfoInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, false, InfoTable, InfoColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.GroupInfo
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

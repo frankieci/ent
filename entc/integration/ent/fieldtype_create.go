@@ -721,6 +721,7 @@ func (ftc *FieldTypeCreate) createSpec() (*FieldType, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = ftc.schemaConfig.FieldType
 	if value, ok := ftc.mutation.Int(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,

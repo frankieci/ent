@@ -9,6 +9,7 @@ package spec
 import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 )
 
@@ -103,6 +104,9 @@ func HasCard() predicate.Spec {
 			sqlgraph.To(CardTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, CardTable, CardPrimaryKey...),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Card
+		step.Edge.Schema = schemaConfig.SpecCard
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -115,6 +119,9 @@ func HasCardWith(preds ...predicate.Card) predicate.Spec {
 			sqlgraph.To(CardInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, CardTable, CardPrimaryKey...),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Card
+		step.Edge.Schema = schemaConfig.SpecCard
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

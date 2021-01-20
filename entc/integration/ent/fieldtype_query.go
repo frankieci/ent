@@ -15,6 +15,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/fieldtype"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -326,6 +327,8 @@ func (ftq *FieldTypeQuery) sqlAll(ctx context.Context) ([]*FieldType, error) {
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = ftq.schemaConfig.FieldType
+	ctx = internal.NewSchemaConfigContext(ctx, ftq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, ftq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -401,6 +404,7 @@ func (ftq *FieldTypeQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = ftq.sql
 		selector.Select(selector.Columns(fieldtype.Columns...)...)
 	}
+	t1.Schema(ftq.schemaConfig.FieldType)
 	for _, p := range ftq.predicates {
 		p(selector)
 	}

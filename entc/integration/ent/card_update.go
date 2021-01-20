@@ -13,6 +13,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/card"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/spec"
 	"github.com/facebook/ent/entc/integration/ent/user"
@@ -246,6 +247,7 @@ func (cu *CardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = cu.schemaConfig.Card
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := cu.mutation.OwnerIDs(); len(nodes) > 0 {
@@ -262,6 +264,7 @@ func (cu *CardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = cu.schemaConfig.Card
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -281,6 +284,7 @@ func (cu *CardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = cu.schemaConfig.Card
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := cu.mutation.RemovedSpecIDs(); len(nodes) > 0 && !cu.mutation.SpecCleared() {
@@ -297,6 +301,7 @@ func (cu *CardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = cu.schemaConfig.Card
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -316,11 +321,14 @@ func (cu *CardUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = cu.schemaConfig.Card
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = cu.schemaConfig.Card
+	ctx = internal.NewSchemaConfigContext(ctx, cu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{card.Label}
@@ -551,6 +559,7 @@ func (cuo *CardUpdateOne) sqlSave(ctx context.Context) (_node *Card, err error) 
 				},
 			},
 		}
+		edge.Schema = cuo.schemaConfig.Card
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := cuo.mutation.OwnerIDs(); len(nodes) > 0 {
@@ -567,6 +576,7 @@ func (cuo *CardUpdateOne) sqlSave(ctx context.Context) (_node *Card, err error) 
 				},
 			},
 		}
+		edge.Schema = cuo.schemaConfig.Card
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -586,6 +596,7 @@ func (cuo *CardUpdateOne) sqlSave(ctx context.Context) (_node *Card, err error) 
 				},
 			},
 		}
+		edge.Schema = cuo.schemaConfig.Card
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := cuo.mutation.RemovedSpecIDs(); len(nodes) > 0 && !cuo.mutation.SpecCleared() {
@@ -602,6 +613,7 @@ func (cuo *CardUpdateOne) sqlSave(ctx context.Context) (_node *Card, err error) 
 				},
 			},
 		}
+		edge.Schema = cuo.schemaConfig.Card
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -621,11 +633,14 @@ func (cuo *CardUpdateOne) sqlSave(ctx context.Context) (_node *Card, err error) 
 				},
 			},
 		}
+		edge.Schema = cuo.schemaConfig.Card
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = cuo.schemaConfig.Card
+	ctx = internal.NewSchemaConfigContext(ctx, cuo.schemaConfig)
 	_node = &Card{config: cuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

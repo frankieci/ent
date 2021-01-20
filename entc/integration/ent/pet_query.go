@@ -14,6 +14,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/pet"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/user"
@@ -77,6 +78,8 @@ func (pq *PetQuery) QueryTeam() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, pet.TeamTable, pet.TeamColumn),
 		)
+		schemaConfig := pq.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -99,6 +102,8 @@ func (pq *PetQuery) QueryOwner() *UserQuery {
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, pet.OwnerTable, pet.OwnerColumn),
 		)
+		schemaConfig := pq.schemaConfig
+		step.To.Schema = schemaConfig.User
 		fromU = sqlgraph.SetNeighbors(pq.driver.Dialect(), step)
 		return fromU, nil
 	}
@@ -406,6 +411,8 @@ func (pq *PetQuery) sqlAll(ctx context.Context) ([]*Pet, error) {
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = pq.schemaConfig.Pet
+	ctx = internal.NewSchemaConfigContext(ctx, pq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, pq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -532,6 +539,7 @@ func (pq *PetQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = pq.sql
 		selector.Select(selector.Columns(pet.Columns...)...)
 	}
+	t1.Schema(pq.schemaConfig.Pet)
 	for _, p := range pq.predicates {
 		p(selector)
 	}

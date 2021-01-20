@@ -255,6 +255,7 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.Schema = gc.schemaConfig.Group
 	if value, ok := gc.mutation.Active(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeBool,
@@ -309,6 +310,7 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = gc.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -328,6 +330,7 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = gc.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -347,6 +350,7 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = gc.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -366,6 +370,7 @@ func (gc *GroupCreate) createSpec() (*Group, *sqlgraph.CreateSpec) {
 				},
 			},
 		}
+		edge.Schema = gc.schemaConfig.Group
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}

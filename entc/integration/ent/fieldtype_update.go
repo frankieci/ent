@@ -16,6 +16,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/fieldtype"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/entc/integration/ent/role"
 	"github.com/facebook/ent/entc/integration/ent/schema"
@@ -1957,6 +1958,8 @@ func (ftu *FieldTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: fieldtype.FieldUUID,
 		})
 	}
+	_spec.Node.Schema = ftu.schemaConfig.FieldType
+	ctx = internal.NewSchemaConfigContext(ctx, ftu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, ftu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{fieldtype.Label}
@@ -3894,6 +3897,8 @@ func (ftuo *FieldTypeUpdateOne) sqlSave(ctx context.Context) (_node *FieldType, 
 			Column: fieldtype.FieldUUID,
 		})
 	}
+	_spec.Node.Schema = ftuo.schemaConfig.FieldType
+	ctx = internal.NewSchemaConfigContext(ctx, ftuo.schemaConfig)
 	_node = &FieldType{config: ftuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

@@ -14,6 +14,7 @@ import (
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/file"
 	"github.com/facebook/ent/entc/integration/ent/filetype"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -231,6 +232,7 @@ func (ftu *FileTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = ftu.schemaConfig.FileType
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ftu.mutation.RemovedFilesIDs(); len(nodes) > 0 && !ftu.mutation.FilesCleared() {
@@ -247,6 +249,7 @@ func (ftu *FileTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = ftu.schemaConfig.FileType
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -266,11 +269,14 @@ func (ftu *FileTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
+		edge.Schema = ftu.schemaConfig.FileType
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = ftu.schemaConfig.FileType
+	ctx = internal.NewSchemaConfigContext(ctx, ftu.schemaConfig)
 	if n, err = sqlgraph.UpdateNodes(ctx, ftu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{filetype.Label}
@@ -487,6 +493,7 @@ func (ftuo *FileTypeUpdateOne) sqlSave(ctx context.Context) (_node *FileType, er
 				},
 			},
 		}
+		edge.Schema = ftuo.schemaConfig.FileType
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := ftuo.mutation.RemovedFilesIDs(); len(nodes) > 0 && !ftuo.mutation.FilesCleared() {
@@ -503,6 +510,7 @@ func (ftuo *FileTypeUpdateOne) sqlSave(ctx context.Context) (_node *FileType, er
 				},
 			},
 		}
+		edge.Schema = ftuo.schemaConfig.FileType
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
@@ -522,11 +530,14 @@ func (ftuo *FileTypeUpdateOne) sqlSave(ctx context.Context) (_node *FileType, er
 				},
 			},
 		}
+		edge.Schema = ftuo.schemaConfig.FileType
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	_spec.Node.Schema = ftuo.schemaConfig.FileType
+	ctx = internal.NewSchemaConfigContext(ctx, ftuo.schemaConfig)
 	_node = &FileType{config: ftuo.config}
 	_spec.Assign = _node.assignValues
 	_spec.ScanValues = _node.scanValues

@@ -15,6 +15,7 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
 	"github.com/facebook/ent/entc/integration/ent/comment"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 	"github.com/facebook/ent/schema/field"
 )
@@ -321,6 +322,8 @@ func (cq *CommentQuery) sqlAll(ctx context.Context) ([]*Comment, error) {
 		node := nodes[len(nodes)-1]
 		return node.assignValues(columns, values)
 	}
+	_spec.Node.Schema = cq.schemaConfig.Comment
+	ctx = internal.NewSchemaConfigContext(ctx, cq.schemaConfig)
 	if err := sqlgraph.QueryNodes(ctx, cq.driver, _spec); err != nil {
 		return nil, err
 	}
@@ -396,6 +399,7 @@ func (cq *CommentQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = cq.sql
 		selector.Select(selector.Columns(comment.Columns...)...)
 	}
+	t1.Schema(cq.schemaConfig.Comment)
 	for _, p := range cq.predicates {
 		p(selector)
 	}

@@ -11,6 +11,7 @@ import (
 
 	"github.com/facebook/ent/dialect/sql"
 	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebook/ent/entc/integration/ent/internal"
 	"github.com/facebook/ent/entc/integration/ent/predicate"
 )
 
@@ -521,6 +522,8 @@ func HasOwner() predicate.Card {
 			sqlgraph.To(OwnerTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, OwnerTable, OwnerColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -533,6 +536,8 @@ func HasOwnerWith(preds ...predicate.User) predicate.Card {
 			sqlgraph.To(OwnerInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2O, true, OwnerTable, OwnerColumn),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.User
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -549,6 +554,9 @@ func HasSpec() predicate.Card {
 			sqlgraph.To(SpecTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, SpecTable, SpecPrimaryKey...),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Spec
+		step.Edge.Schema = schemaConfig.SpecCard
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
@@ -561,6 +569,9 @@ func HasSpecWith(preds ...predicate.Spec) predicate.Card {
 			sqlgraph.To(SpecInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, SpecTable, SpecPrimaryKey...),
 		)
+		schemaConfig := internal.SchemaConfigFromContext(s.Context())
+		step.To.Schema = schemaConfig.Spec
+		step.Edge.Schema = schemaConfig.SpecCard
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
